@@ -1,17 +1,65 @@
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-# s3-access-logs
+# s3-data-to-parquet
+
+Convert S3 data to parquet format. To use this module a docker image must be uploaded to ECR that implements
+code similar to [deptofdefense/s3-access-logs](https://github.com/deptofdefense/s3-access-logs). This docker
+image should take the following environment variables:
+
+* SRC - The s3 bucket and key holding the code to convert to parquet.
+* DST - The s3 bucket and key to place the parquet data. This bucket is created by the module.
+* TRACKING\_DST - The S3 bucket and key to place tracking information. It's ok to ignore this parameter.
+* AWS\_REGION - The AWS Region where this module is deployed.
+* TIMEOUT - The timeout in seconds for the code.
 
 ## Usage
 
-Add Usage information here
+```hcl
+module "s3-access-logs" {
+  source = "dod-iac/s3-data-to-parquet/aws"
 
-Resources:
+  name = format("%s-%s-s3-access-logs", var.application, var.environment)
+  image_sha = "sha256:c58e5fd04e0d118899e2732093c6fc3024d537a28cfd4a2956d1163d813a4444"
 
-* [Article Example](https://article.example.com)
+  vpc_id      = module.vpc.vpc_id
+  ecs_subnets = module.vpc.private_subnets
+
+  target_bucket = module.logs.aws_logs_bucket
+  target_prefix_list = [
+    "s3/bucket1",
+    "s3/bucket2",
+  ]
+  logging_bucket = module.logs.aws_logs_bucket
+
+  tags = {
+    Project     = var.project
+    Application = var.application
+    Environment = var.environment
+    Automation  = "Terraform"
+  }
+}
+```
+
+## Querying S3 Access Logs with Athena
+
+A common use case is to query s3 access logs with the data created by this module. You can do this
+using another modules [dod-iac/terraform-aws-s3-access-logs](https://github.com/dod-iac/terraform-aws-s3-access-logs).
+
+The usage example is:
 
 ```hcl
-module "example" {
-  source = "dod-iac/example/aws"
+module "s3_access_logs_parquet" {
+  source  = "dod-iac/s3-access-logs/aws"
+  version = "~> 1.1.0"
+
+  project = format("%s-%s-s3-access-logs", var.application, var.environment)
+
+  target_bucket  = module.s3_access_logs_to_parquet.parquet_logs_bucket.id
+  logging_bucket = module.logs.aws_logs_bucket
+
+  database_name = module.s3_access_logs_to_parquet.database_name
+  table_name    = "s3"
+
+  bytes_scanned_cutoff_per_query = 4294967296 # 4GB
 
   tags = {
     Project     = var.project
@@ -111,11 +159,11 @@ pre-commit install --install-hooks
 | <a name="input_glue_crawler_exclusions"></a> [glue\_crawler\_exclusions](#input\_glue\_crawler\_exclusions) | Glue crawler exclusions. Check rules here: <https://docs.aws.amazon.com/glue/latest/dg/define-crawler.html#crawler-source-type> | `list(string)` | `[]` | no |
 | <a name="input_image_sha"></a> [image\_sha](#input\_image\_sha) | The SHA256 of the image to use in the task. Not an image tag. | `string` | n/a | yes |
 | <a name="input_logging_bucket"></a> [logging\_bucket](#input\_logging\_bucket) | The AWS S3 logging bucket | `string` | n/a | yes |
-| <a name="input_name"></a> [name](#input\_name) | The namespace for the module | `string` | `"s3-access-logs"` | no |
+| <a name="input_name"></a> [name](#input\_name) | The namespace for the module | `string` | `"s3-data-to-parquet"` | no |
 | <a name="input_schedule_expression"></a> [schedule\_expression](#input\_schedule\_expression) | The schedule to run the task on in AWS cron format. | `string` | `"cron(30 * * * ? *)"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the AWS resources | `map(string)` | `{}` | no |
-| <a name="input_target_bucket"></a> [target\_bucket](#input\_target\_bucket) | The S3 bucket to target for s3 access logs. | `string` | n/a | yes |
-| <a name="input_target_prefix_list"></a> [target\_prefix\_list](#input\_target\_prefix\_list) | The list of S3 prefixes to target for s3 access logs | `list(string)` | <pre>[<br>  "s3"<br>]</pre> | no |
+| <a name="input_target_bucket"></a> [target\_bucket](#input\_target\_bucket) | The S3 bucket to target for data. | `string` | n/a | yes |
+| <a name="input_target_prefix_list"></a> [target\_prefix\_list](#input\_target\_prefix\_list) | The list of S3 prefixes to target for data. | `list(string)` | <pre>[<br>  "s3"<br>]</pre> | no |
 | <a name="input_task_timeout"></a> [task\_timeout](#input\_task\_timeout) | The timeout before the task ends. | `number` | `300` | no |
 | <a name="input_tracking_dst_prefix"></a> [tracking\_dst\_prefix](#input\_tracking\_dst\_prefix) | The prefix used for all ECS task tracking | `string` | `"s3-tracking"` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The vpc ID related to the subnets. | `string` | n/a | yes |
@@ -125,5 +173,5 @@ pre-commit install --install-hooks
 | Name | Description |
 |------|-------------|
 | <a name="output_database_name"></a> [database\_name](#output\_database\_name) | The name of the Glue database |
-| <a name="output_parquet_logs_bucket_id"></a> [parquet\_logs\_bucket\_id](#output\_parquet\_logs\_bucket\_id) | The bucket used to output parquet logs |
+| <a name="output_parquet_logs_bucket"></a> [parquet\_logs\_bucket](#output\_parquet\_logs\_bucket) | The s3 bucket used to output parquet logs |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
