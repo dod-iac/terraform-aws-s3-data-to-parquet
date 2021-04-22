@@ -1,35 +1,13 @@
-/**
- * # Terraform Module template
+/*
+ * # s3-data-to-parquet
  *
- * This repository is meant to be a template for creating new terraform modules.
- *
- * ## Creating a new Terraform Module
- *
- * 1. Clone this repo, renaming appropriately.
- * 1. Write your terraform code in the root dir.
- * 1. Ensure you've completed the [Developer Setup](#developer-setup).
- * 1. In the root dir, run `go mod init MODULE_NAME` to get a new `go.mod` file. Then run `go mod tidy`. This creates a new `go.sum` file and imports the dependencies and checksums specific to your repository.
- * 1. Run your tests to ensure they work as expected using instructions below.
- *
- * ---
- *
- * <!-- DELETE ABOVE THIS LINE -->
- *
- * ## Description
- *
- * Please put a description of what this module does here
+ * Convert S3 data to parquet format
  *
  * ## Usage
  *
- * Add Usage information here
- *
- * Resources:
- *
- * * [Article Example](https://article.example.com)
- *
  * ```hcl
- * module "example" {
- *   source = "dod-iac/example/aws"
+ * module "s3-access-logs" {
+ *   source = "dod-iac/s3-data-to-parquet/aws"
  *
  *   tags = {
  *     Project     = var.project
@@ -61,7 +39,7 @@
  *
  */
 
+
 data "aws_caller_identity" "current" {}
-# data "aws_iam_account_alias" "current" {}
 data "aws_partition" "current" {}
 data "aws_region" "current" {}
