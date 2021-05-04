@@ -158,6 +158,7 @@ pre-commit install --install-hooks
 | <a name="input_ecs_task_mem"></a> [ecs\_task\_mem](#input\_ecs\_task\_mem) | n/a | `number` | `2048` | no |
 | <a name="input_glue_crawler_exclusions"></a> [glue\_crawler\_exclusions](#input\_glue\_crawler\_exclusions) | Glue crawler exclusions. Check rules here: <https://docs.aws.amazon.com/glue/latest/dg/define-crawler.html#crawler-source-type> | `list(string)` | `[]` | no |
 | <a name="input_image_sha"></a> [image\_sha](#input\_image\_sha) | The SHA256 of the image to use in the task. Not an image tag. | `string` | n/a | yes |
+| <a name="input_keys"></a> [keys](#input\_keys) | The ARNs of the AWS KMS keys the policy is allowed to use.  Use ["*"] to allow all keys. | `list(string)` | `[]` | no |
 | <a name="input_logging_bucket"></a> [logging\_bucket](#input\_logging\_bucket) | The AWS S3 logging bucket | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | The namespace for the module | `string` | `"s3-data-to-parquet"` | no |
 | <a name="input_schedule_expression"></a> [schedule\_expression](#input\_schedule\_expression) | The schedule to run the task on in AWS cron format. | `string` | `"cron(30 * * * ? *)"` | no |
