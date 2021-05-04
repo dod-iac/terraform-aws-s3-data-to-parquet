@@ -35,6 +35,18 @@ data "aws_iam_policy_document" "glue_policy_document" {
       "${module.parquet_logs.arn}/*",
     ])
   }
+
+  statement {
+    sid = "KMSAccess"
+    actions = [
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:GenerateDataKey"
+    ]
+    effect    = length(var.keys) > 0 ? "Allow" : "Deny"
+    resources = length(var.keys) > 0 ? var.keys : ["*"]
+  }
+
 }
 
 resource "aws_iam_policy" "glue_policy" {

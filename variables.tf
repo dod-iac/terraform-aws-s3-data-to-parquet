@@ -88,3 +88,9 @@ variable "glue_crawler_exclusions" {
   description = "Glue crawler exclusions. Check rules here: <https://docs.aws.amazon.com/glue/latest/dg/define-crawler.html#crawler-source-type>"
   default     = []
 }
+
+variable "keys" {
+  type        = list(string)
+  description = "The ARNs of the AWS KMS keys the policy is allowed to use.  Use [\"*\"] to allow all keys."
+  default     = []
+}
