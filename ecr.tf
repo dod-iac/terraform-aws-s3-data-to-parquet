@@ -4,7 +4,7 @@
 #
 
 module "ecr_kms_key" {
-  source = "dod-iac/ecr-kms-key/aws"
+  source  = "dod-iac/ecr-kms-key/aws"
   version = "1.0.1"
 
   name = format("alias/app-%s", var.name)

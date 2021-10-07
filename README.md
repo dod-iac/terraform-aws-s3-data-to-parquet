@@ -72,7 +72,7 @@ module "s3_access_logs_parquet" {
 
 ## Terraform Version
 
-Terraform 0.13. Pin module version to ~> 1.0.0 . Submit pull-requests to master branch.
+Terraform 0.13. Pin module version to ~> 1.0.0 . Submit pull-requests to main branch.
 
 Terraform 0.11 and 0.12 are not supported.
 
@@ -107,9 +107,9 @@ pre-commit install --install-hooks
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_cloudwatch_kms_key"></a> [cloudwatch\_kms\_key](#module\_cloudwatch\_kms\_key) | dod-iac/cloudwatch-kms-key/aws | ~> 1.0.0 |
-| <a name="module_ecr_kms_key"></a> [ecr\_kms\_key](#module\_ecr\_kms\_key) | dod-iac/ecr-kms-key/aws |  |
+| <a name="module_ecr_kms_key"></a> [ecr\_kms\_key](#module\_ecr\_kms\_key) | dod-iac/ecr-kms-key/aws | 1.0.1 |
 | <a name="module_ecr_push"></a> [ecr\_push](#module\_ecr\_push) | dod-iac/ecr-iam-policy/aws | 1.0.0 |
-| <a name="module_ecr_repo"></a> [ecr\_repo](#module\_ecr\_repo) | dod-iac/ecr-repo/aws | 1.0.0 |
+| <a name="module_ecr_repo"></a> [ecr\_repo](#module\_ecr\_repo) | dod-iac/ecr-repo/aws | 1.1.1 |
 | <a name="module_parquet_logs"></a> [parquet\_logs](#module\_parquet\_logs) | trussworks/s3-private-bucket/aws | ~> 3.5.0 |
 
 ## Resources
