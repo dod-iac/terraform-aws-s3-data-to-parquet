@@ -5,6 +5,7 @@
 
 module "ecr_kms_key" {
   source = "dod-iac/ecr-kms-key/aws"
+  version = "1.0.1"
 
   name = format("alias/app-%s", var.name)
 
@@ -13,7 +14,7 @@ module "ecr_kms_key" {
 
 module "ecr_repo" {
   source  = "dod-iac/ecr-repo/aws"
-  version = "1.0.0"
+  version = "1.1.1"
 
   encryption_type = "KMS"
 
