@@ -1,3 +1,9 @@
+variable "enabled" {
+  type        = bool
+  default     = true
+  description = "Enable ECS tasks to run."
+}
+
 variable "name" {
   type        = string
   default     = "s3-data-to-parquet"
