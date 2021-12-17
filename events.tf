@@ -54,6 +54,7 @@ resource "aws_cloudwatch_event_rule" "run_command" {
   name                = var.name
   description         = format("Scheduled task for %s", var.name)
   schedule_expression = var.schedule_expression
+  is_enabled          = var.enabled
 }
 
 resource "aws_security_group" "outbound" {
